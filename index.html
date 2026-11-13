@@ -123,6 +123,7 @@
       border: none;
       cursor: pointer;
       font-size: 1rem;
+      display: inline-block;
     }
     .btn-primary:hover { background: var(--accent-hover); }
     .btn-outline {
@@ -133,6 +134,7 @@
       text-decoration: none;
       font-weight: 600;
       transition: all 0.2s;
+      display: inline-block;
     }
     .btn-outline:hover { background: var(--white); color: var(--primary); }
 
@@ -205,6 +207,39 @@
       position: absolute;
       left: 0;
     }
+
+    /* Tarjeta Directivo y Brochure */
+    .director-card {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 2.2rem;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+      border: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+    .director-info h3 { font-size: 1.45rem; color: var(--primary); margin-bottom: 0.2rem; }
+    .director-role { color: var(--accent-hover); font-weight: 700; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem; }
+    .director-desc { color: var(--text-muted); font-size: 0.95rem; max-width: 550px; }
+    .director-actions { display: flex; gap: 0.8rem; flex-wrap: wrap; }
+    .btn-pdf {
+      background: var(--primary);
+      color: var(--white);
+      padding: 0.85rem 1.4rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: background 0.2s;
+    }
+    .btn-pdf:hover { background: var(--secondary); }
 
     /* Cotizador Automatizado WhatsApp */
     .quote-wrapper {
@@ -281,9 +316,10 @@
       background: var(--primary);
       color: #94a3b8;
       text-align: center;
-      padding: 2rem 1.5rem;
+      padding: 2.5rem 1.5rem;
       font-size: 0.9rem;
     }
+    footer strong { color: var(--white); }
   </style>
 </head>
 <body>
@@ -295,6 +331,7 @@
       <nav>
         <a href="#servicios">Servicios</a>
         <a href="#normativa">Normativa</a>
+        <a href="brochure.pdf" target="_blank">Brochure PDF</a>
         <a href="#cotizar">Cotizar</a>
         <a href="#" onclick="enviarEmergencia()" class="btn-emergency">🚨 Emergencia 24/7</a>
       </nav>
@@ -309,7 +346,7 @@
       <p>Especialistas en mantenimiento preventivo y correctivo, instalación de equipos nuevos, modernización tecnológica y adecuación bajo norma NTC 5926-1.</p>
       <div class="hero-buttons">
         <a href="#cotizar" class="btn-primary">Solicitar Cotización Rápida</a>
-        <a href="#servicios" class="btn-outline">Ver Servicios</a>
+        <a href="brochure.pdf" target="_blank" class="btn-outline">📄 Descargar Brochure PDF</a>
       </div>
     </div>
   </section>
@@ -382,12 +419,26 @@
     </div>
   </section>
 
-  <!-- Formulario Automatizado hacia WhatsApp -->
-  <section id="cotizar">
+  <!-- Tarjeta de Contacto Directo + Cotizador -->
+  <section id="cotizar" style="padding-top: 1rem;">
     <div class="container">
+      
+      <!-- Tarjeta Directivo y Descarga PDF -->
+      <div class="director-card">
+        <div class="director-info">
+          <h3>Raúl Pinzón</h3>
+          <div class="director-role">Gerente de Operaciones — Lift Technology</div>
+          <p class="director-desc">Atención personalizada para administraciones, constructoras y gerentes de mantenimiento. Descarga nuestro portafolio corporativo o contáctame directamente.</p>
+        </div>
+        <div class="director-actions">
+          <a href="brochure.pdf" target="_blank" class="btn-pdf">📄 Ver / Descargar Brochure (PDF)</a>
+          <button onclick="enviarConsultaRapida()" class="btn-primary" style="background: var(--whatsapp); color: white;">📲 Hablar con Raúl</button>
+        </div>
+      </div>
+
       <div class="section-title">
         <h2>Cotización Inmediata por WhatsApp</h2>
-        <p>Completa estos datos y nuestro sistema generará tu solicitud lista para ser atendida por un ingeniero.</p>
+        <p>Completa estos datos y nuestro sistema generará tu solicitud lista para ser atendida.</p>
       </div>
 
       <div class="quote-wrapper">
@@ -439,7 +490,8 @@
   </a>
 
   <footer>
-    <p>&copy; 2026 Lift Technology — Ingeniería, Mantenimiento y Modernización de Ascensores. Todos los derechos reservados.</p>
+    <p><strong>Lift Technology</strong> — Raúl Pinzón, Gerente de Operaciones</p>
+    <p style="margin-top: 0.4rem;">&copy; 2026 Ingeniería, Mantenimiento, Instalación y Modernización de Ascensores. Todos los derechos reservados.</p>
   </footer>
 
   <!-- Lógica de Automatización WhatsApp -->
@@ -447,11 +499,9 @@
     // ==========================================
     // CONFIGURACIÓN: PON AQUÍ TU NÚMERO DE WHATSAPP
     // Formato: Código de país + número (sin el signo + ni espacios)
-    // Ejemplo Colombia: 573001234567
     // ==========================================
     const TELEFONO_WHATSAPP = "573132735873";
 
-    // Función para preseleccionar servicio desde las tarjetas y bajar al formulario
     function seleccionarServicio(nombreServicio) {
       const select = document.getElementById("servicio");
       for (let i = 0; i < select.options.length; i++) {
@@ -464,7 +514,6 @@
       document.getElementById("nombre").focus();
     }
 
-    // Envío estructurado del formulario a WhatsApp
     function enviarCotizacionWhatsApp(event) {
       event.preventDefault();
 
@@ -475,7 +524,7 @@
       const detalles = document.getElementById("detalles").value.trim() || "Sin observaciones adicionales";
 
       const mensaje = 
-        `Hola *Lift Technology*, solicito información/cotización:\n\n` +
+        `Hola *Raúl Pinzón (Lift Technology)*, solicito información/cotización:\n\n` +
         `👤 *Contacto:* ${nombre}\n` +
         `🏢 *Edificio/Empresa:* ${edificio}\n` +
         `🛠️ *Servicio:* ${servicio}\n` +
@@ -486,15 +535,13 @@
       window.open(url, "_blank");
     }
 
-    // Mensaje automático para emergencias 24/7
     function enviarEmergencia() {
-      const mensaje = `🚨 *EMERGENCIA DE ASCENSOR* 🚨\nHola, necesito asistencia técnica urgente para un ascensor detenido/con falla. Ubicación: `;
+      const mensaje = `🚨 *EMERGENCIA DE ASCENSOR* 🚨\nHola Raúl, necesito asistencia técnica urgente para un ascensor detenido/con falla. Ubicación: `;
       window.open(`https://wa.me/${TELEFONO_WHATSAPP}?text=${encodeURIComponent(mensaje)}`, "_blank");
     }
 
-    // Mensaje automático del botón flotante
     function enviarConsultaRapida() {
-      const mensaje = `Hola *Lift Technology*, visité su página web y me gustaría recibir asesoría sobre sus servicios de ascensores.`;
+      const mensaje = `Hola *Raúl Pinzón*, visité la página de *Lift Technology* y me gustaría recibir asesoría sobre sus servicios de ascensores.`;
       window.open(`https://wa.me/${TELEFONO_WHATSAPP}?text=${encodeURIComponent(mensaje)}`, "_blank");
     }
   </script>
